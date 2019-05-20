@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GTFS Stop Map</title>
+  <meta charset = "UTF8"/>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <!--social media stylesheet-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="js/leaflet.css" />
+  <link rel="shortcut icon" href="img/gm.ico" />
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <!--[if !IE]><!-->
+  <link rel="stylesheet" href="style.css" />
+  <!--<![endif]-->
+  <!--[if IE]> 
+  <link rel="stylesheet" type="text/css" href="iestyle.css" />
+  <![endif]-->
+  <script src="js/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+  <script src="js/leaflet-providers.js"></script>
+  <script src="js/jquery-3.4.0.js"></script>
+  <script src="js/leaflet.ajax.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Rochester" rel="stylesheet">
+
+</head>
+<body>
+<div class="w3-sidebar w3-bar-block column-side">
+  <h3 class="w3-bar-item">Jump to...</h3>
+    <a href="#intro" class="w3-bar-item nav-btn">Intro</a>
+    <a href="#data" class="w3-bar-item nav-btn">Resources</a>
+    <a href="#method" class="w3-bar-item nav-btn">Method</a>
+    <a href="#final" class="w3-bar-item nav-btn">Final Map</a>
+    <a href="#future" class="w3-bar-item nav-btn">Future Work</a>
+    <div id="footer">
+      <div class="footer-socials">
+      <a target="_blank" href="https://www.linkedin.com/in/gabriellasmarquez" class="fa fa-linkedin-square"></a>
+      <a target="_blank" href="https://github.com/gsmarquez" class="fa fa-github"></a>
+      <a href="mailto:gabriellasmarquez@gmail.com" target="_top" class="fa fa-envelope-o"></a>
+      <div id="name-footer">G. Marquez</div>
+   </div>
+</div>
+</div>
+<div class="row">
+  <div class="column main">
+  <div id="header" >
+    <div id="title"><h1>Displaying GTFS Data Using Leaflet</h1><br><br><h5>Gabriella Marquez<br>GISC603 Cartographic Visualization<br>May 15, 2019</h5><br><br><br>
+      <a href="#intro"><i id="startbtn" class="fa fa-angle-double-down bounce"></i></a>
+    </div>
+  </div>
+  <div id="content">
+  <div id="intro" class="section">
+    <h2>Introduction</h2>
+    <div class="row">
+      <div class="intro-column intro-left">
+      <p><h4>What's GTFS?</h4>The <a target ="_blank" href="https://developers.google.com/transit/gtfs/reference/">General Transit Feed Specifications (GTFS)</a> are a set of text files created by public transit agencies in order to allow their scheduling data to be used in various applications, such as Google Maps or the Transit App. GTFS is the first standardized public transit timetable format.<br><br>
+        <h4>Benefits</h4> It makes it possible for developers worldwide to use this data as the base for various trip planner applications. For the transit user, it means that they will be provided with consistent information when planning their trip. Aside from its obvious trip planning purpose, the GTFS data can also be used for service level analysis. The fact that it is readily available for free is an added bonus!<br><br>
+        <h4>Project Purpose</h4> 
+        <ul>
+          <li>Create an interactive web map to display the GTFS data by bus stop. Specifically, the hourly count of trips at each stop will be displayed.</li><br>
+        </ul>
+	      <h4>Personal Goals:</h4> 
+        <ul>
+          <li>Use all Open-Source or Low-Cost solutions.</li>
+          <li>Do as much as possible programmatically.</li>
+        </ul>
+      </p>
+    </div>
+    <div class="intro-column intro-right">
+      <p>
+      <iframe src="https://giphy.com/embed/3o6ZtnIgEId4yC3ZqU" width="450" height="200" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><a href="https://giphy.com/gifs/southparkgifs-3o6ZtnIgEId4yC3ZqU" style="font-size:.8em;">via GIPHY</a><br><br>
+      <div style="width:100%;height:0;padding-bottom:100%;position:relative;"><iframe src="https://giphy.com/embed/pOKrXLf9N5g76" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/hacker-pOKrXLf9N5g76" style="font-size:.8em; text-align: right;">via GIPHY</a></p>
+    </div>
+    </div>
+  </div>
+  <div id="data" class="section">
+    <h2>Resources</h2>
+      <div class="row">
+        <div class="data-column">
+          <p>
+          <h4>Input Data</h4>
+          <p>
+            <a target ="_blank" href="https://transitfeeds.com/search?q=long+beach+transit">GTFS txt files for Long Beach Transit</a><br>
+          </p>
+        </p>
+      </div>
+      <div class="data-column">
+          <p>
+          <h4>Software</h4>
+          <p>
+	    <a target ="_blank" href="https://www.qgis.org/en/site/">QGIS 3.6.2</a><br>
+            PostgreSQL on <a target ="_blank" href="https://aws.amazon.com/rds//">AWS RDS</a> (free tier)<br>
+            Microsoft Server 2016 on <a target ="_blank" href="https://aws.amazon.com/ec2/">AWS EC2</a> (free tier)<br>
+          </p>
+        </p>
+      </div>
+      <div class="data-column">
+          <p>
+          <h4>Languages</h4>
+          <p>
+            Python (<a target ="_blank" href="https://pandas.pydata.org/">Pandas </a>and <a target ="_blank" href="https://pypi.org/project/PrettyTable/">PrettyTable</a>)<br>
+            PHP: Hypertext Preprocessor<br>
+            JavaScript (<a target ="_blank" href="https://leafletjs.com/">Leaflet</a>)<br>
+            HTML/CSS
+          </p>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="method" class="section">
+    <h2>Methodology</h2>
+      <div class="row">
+        <div class="column steps">
+          <p>
+          <ol>
+            <li>Create a Python script using the <a target ="_blank" href="https://pandas.pydata.org/">Pandas library</a> to read the GTFS text files and create csv files for the count by stop by hour (to be used for the map), as well as the count by category (to be used in the summary table). Using the data from the count by stop by hour csv file, create a geoJSON file.</li><br>
+            <li>In Amazon Web Services, create a PostgreSQL database with Amazon RDS. Load the PostGIS Extension into the PostgreSQL database. Using Amazon EC2, launch a  Windows Server 2016 instance.</li><br>
+            <li>Upload the geoJSON file to the database using QGIS.</li><br>
+            <li>Using the <a target ="_blank" href="https://leafletjs.com/">Leaflet Javascript library, </a>create a web map. I used the <a target ="_blank" href="https://github.com/leaflet-extras/leaflet-providers">Leaflet providers extension </a>for my basemap.</li><br>
+            <li>Log into the server via a remote connection. Using Microsoft Web Platform Installer, install PHP 7.3. Edit the PHP configuration file to enable the PDO PostgreSQL Extension. Create a PHP file to call the data out of the PostgreSQL database.</li><br>
+            <li>Using the PHP file, make an AJAX request to add the data to the Leaflet map.</li><br>
+            <li>In order to filter through the data by hour, create an HTML form selection box that displays each hour. Create a Javascript file that adds an Event Listener to each option in the selection box and filters the data on the map according to which option is clicked.</li><br>
+            <li>To create the summary table that shows the count of stops by category, I used the csv file created in Step 1 that summarizes the counts by category. Using the <a target ="_blank" href="https://pypi.org/project/PrettyTable/">Python PrettyTable library</a>, I created an HTML table for the data. Similar to the map filter, I created a Javascript file with an Event Listener for each option in the selection box that filters the rows in the HTML table.</li><br>
+            <li>Create a legend using Scalable Vector Graphics (SVG).</li><br>
+            <li>Combine the Leaflet map, legend, selection box, and related content into an HTML web page, styled using CSS.</li><br>
+            <li>Copy the HTML, CSS, Javascript, and PHP files into a folder in the root directory of the Windows Server in order to access the finished site from other computers.</li>
+          </ol>
+          </p>
+        </div>
+        <div class="column flowchart">
+          <img src="img/gtfs_methods.png" class="flowchart">
+        </div> 
+      </div>
+  </div>
+  <div id="final" class="section">
+    <h2>Final Map</h2>
+  <div class="row">
+    <div id="map"></div>
+    <div id="map_info">
+      <div id="selection-box">
+        <h4>Select Hour:</h4>
+          <form id ="myInput">
+            <select size="8">
+            <option  id="option3" name="hour" value="3"> 3 a.m.</option>
+            <option  id="option4" name="hour" value="4"> 4 a.m.</option>
+            <option  id="option5" name="hour" value="5"> 5 a.m.</option>
+            <option  id="option6" name="hour" value="6"> 6 a.m.</option>
+            <option  id="option7" name="hour" value="7"> 7 a.m.</option>
+            <option  id="option8" name="hour" value="8"> 8 a.m.</option>
+            <option  id="option9" name="hour" value="9"> 9 a.m.</option>
+            <option  id="option10" name="hour" value="10"> 10 a.m.</option>
+            <option  id="option11" name="hour" value="11"> 11 a.m.</option>
+            <option  id="option12" name="hour" value="12"> 12 p.m.</option>
+            <option  id="option13" name="hour" value="13"> 1 p.m.</option>
+            <option  id="option14" name="hour" value="14"> 2 p.m.</option>
+            <option  id="option15" name="hour" value="15"> 3 p.m.</option>
+            <option  id="option16" name="hour" value="16"> 4 p.m.</option>
+            <option  id="option17" name="hour" value="17"> 5 p.m.</option>
+            <option  id="option18" name="hour" value="18"> 6 p.m.</option>
+            <option  id="option19" name="hour" value="19"> 7 p.m.</option>
+            <option  id="option20" name="hour" value="20"> 8 p.m.</option>
+            <option  id="option21" name="hour" value="21"> 9 p.m.</option>
+            <option  id="option22" name="hour" value="22"> 10 p.m.</option>
+            <option  id="option23" name="hour" value="23"> 11 p.m.</option>
+            <option  id="option24" name="hour" value="24"> 12 a.m.</option>
+            <option  id="option25" name="hour" value="25"> 1 a.m.</option>
+            </select><br>
+          </form>
+      </div>
+      <div id="legend">
+        <h4>No. of Trips</h4>
+          <svg height="150" width="150">
+          <circle cx="20" cy="10" r="2" fill="#FEC1C1" opacity ="0.6"/><text x="40" y="15">1 </text>
+          <circle cx="20" cy="40" r="3" fill="#FEA3A3" opacity ="0.6"/><text x="40" y="45">2 - 3</text>
+          <circle cx="20" cy="70" r="5" fill="#FE7575" opacity ="0.6"/><text x="40" y="75">4 - 5</text>
+          <circle cx="20" cy="100" r="7" fill="#EF1919" opacity ="0.6"/><text x="40" y="105">6 - 7</text>
+          <circle cx="20" cy="130" r="9" fill="#970000" opacity ="0.6"/><text x="40" y="135">8+</text>
+          Sorry, your browser does not support inline SVG.  
+          </svg> 
+      </div>
+      <div id="table">
+      <h4>Count of Stops by Category</h4>
+      <table>
+      <thead>
+          <tr>
+              <th>No. of Trips</th>
+              <th>1</th>
+              <th>2 to 3</th>
+              <th>4 to 5</th>
+              <th>6 to 7</th>
+              <th>8+</th>
+          </tr>
+      </thead>
+      <tbody id="category_count">
+          <tr>
+              <td>10 am Count</td>
+              <td>207</td>
+              <td>963</td>
+              <td>400</td>
+              <td>203</td>
+              <td>114</td>
+          </tr>
+          <tr>
+              <td>11 am Count</td>
+              <td>191</td>
+              <td>1002</td>
+              <td>389</td>
+              <td>196</td>
+              <td>109</td>
+          </tr>
+          <tr>
+              <td>12 pm Count</td>
+              <td>179</td>
+              <td>1010</td>
+              <td>371</td>
+              <td>216</td>
+              <td>111</td>
+          </tr>
+          <tr>
+              <td>01 pm Count</td>
+              <td>197</td>
+              <td>984</td>
+              <td>389</td>
+              <td>185</td>
+              <td>131</td>
+          </tr>
+          <tr>
+              <td>02 pm Count</td>
+              <td>227</td>
+              <td>932</td>
+              <td>353</td>
+              <td>211</td>
+              <td>164</td>
+          </tr>
+          <tr>
+              <td>3 pm Count</td>
+              <td>174</td>
+              <td>948</td>
+              <td>322</td>
+              <td>248</td>
+              <td>192</td>
+          </tr>
+          <tr>
+              <td>4 pm Count</td>
+              <td>228</td>
+              <td>960</td>
+              <td>347</td>
+              <td>206</td>
+              <td>146</td>
+          </tr>
+          <tr>
+              <td>5 pm Count</td>
+              <td>254</td>
+              <td>960</td>
+              <td>372</td>
+              <td>189</td>
+              <td>104</td>
+          </tr>
+          <tr>
+              <td>6 pm Count</td>
+              <td>336</td>
+              <td>932</td>
+              <td>322</td>
+              <td>186</td>
+              <td>74</td>
+          </tr>
+          <tr>
+              <td>7 pm Count</td>
+              <td>619</td>
+              <td>824</td>
+              <td>257</td>
+              <td>63</td>
+              <td>27</td>
+          </tr>
+          <tr>
+              <td>8 pm Count</td>
+              <td>794</td>
+              <td>706</td>
+              <td>167</td>
+              <td>31</td>
+              <td>13</td>
+          </tr>
+          <tr>
+              <td>9 pm Count</td>
+              <td>632</td>
+              <td>696</td>
+              <td>134</td>
+              <td>13</td>
+              <td>12</td>
+          </tr>
+          <tr>
+              <td>10 pm Count</td>
+              <td>605</td>
+              <td>608</td>
+              <td>79</td>
+              <td>6</td>
+              <td>8</td>
+          </tr>
+          <tr>
+              <td>11 pm Count</td>
+              <td>639</td>
+              <td>279</td>
+              <td>31</td>
+              <td>6</td>
+              <td>1</td>
+          </tr>
+          <tr>
+              <td>12 am Count</td>
+              <td>505</td>
+              <td>91</td>
+              <td>11</td>
+              <td>1</td>
+              <td>0</td>
+          </tr>
+          <tr>
+              <td>01 am Count</td>
+              <td>125</td>
+              <td>3</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+          </tr>
+          <tr>
+              <td>3 am Count</td>
+              <td>4</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+          </tr>
+          <tr>
+              <td>4 am Count</td>
+              <td>377</td>
+              <td>65</td>
+              <td>4</td>
+              <td>0</td>
+              <td>0</td>
+          </tr>
+          <tr>
+              <td>5 am Count</td>
+              <td>591</td>
+              <td>785</td>
+              <td>124</td>
+              <td>28</td>
+              <td>7</td>
+          </tr>
+          <tr>
+              <td>6 am Count</td>
+              <td>355</td>
+              <td>920</td>
+              <td>331</td>
+              <td>152</td>
+              <td>91</td>
+          </tr>
+          <tr>
+              <td>7 am Count</td>
+              <td>250</td>
+              <td>912</td>
+              <td>314</td>
+              <td>221</td>
+              <td>189</td>
+          </tr>
+          <tr>
+              <td>8 am Count</td>
+              <td>224</td>
+              <td>952</td>
+              <td>392</td>
+              <td>187</td>
+              <td>132</td>
+          </tr>
+          <tr>
+              <td>9 am Count</td>
+              <td>145</td>
+              <td>1058</td>
+              <td>387</td>
+              <td>179</td>
+              <td>118</td>
+          </tr>
+      </tbody>
+      </table>
+      <script>  
+        //load table for 6 am when page opens
+        var rows = $("#category_count").find("tr").hide();
+        rows.filter(":contains('6 am Count')").show();</script>
+        <!--script to update table when hour in scroll box is selected-->
+      <script src="update_table.js"></script>
+      </div>
+      <br><br>      
+    </div>
+   <i style="font-size:12px;margin-left:3%;">Source: Long Beach Transit GTFS (February 2019 - Weekday 71 schedule)</i>
+  </div>
+</div>
+<div id="future" class="section">
+    <h2>Future Work</h2>
+	<p>
+	<h4>Workflow Improvements</h4>
+	<ul>
+	<li>The script should be generalized as much as possible so that the process can be automated for any agency, any service change. An interface can be added for any variables that require user input. This would allow users at all levels to utilize the tool.</li>
+  <br>
+	<li>The method used to pull the filtered data from the server and into the map can be improved. Currently, I am removing the layer and re-adding it from the server everytime an hour is selected. This is a slow process and fails occasionally.</li>
+  <br>
+	<li>The JavaScript file that contains the event listeners for the hour selection box is redundant. I have an event listener for every hour for both the table and the map. This can be streamlined so that there is one event listener that uses the value from the selection box to update both the map and the table</li>
+	</ul>
+	<br>
+	<h4>Further Analysis</h4>
+	<ul>
+	<li>An output of the Python script is a CSV file summarizing the trip count information by Route as well as stop. Due to time contraints, I was not able to add this information to the map. In addition to the hour selector, a Route selector can be added to further filter the data displayed.</li>
+	</ul>
+	</p>
+</div>
+</div>
+</div>
+</div>
+  <script type="text/javascript">
+  var map = L.map('map').setView([33.83, -118.15], 12);
+  var pointsgroup = L.featureGroup();
+  // load a tile layer
+  var mapTiles = L.tileLayer.provider('CartoDB.Positron').addTo(map);
+    // Add AJAX request for data
+  $.ajax({
+    url:'load_geojson.php',
+    success: function(response){
+      console.log(response);
+      jsnStops= JSON.parse(response);
+      lyrbusstops = L.geoJSON(jsnStops,
+        {pointToLayer:returnStopMarker,
+         filter:
+            function(feature,layer){
+              return(feature.properties.hour == 'hr_6')
+            }}).addTo(map);
+        },
+      error: function (xhr,status,error) {
+      alert("ERROR: "+error);
+          }
+        });
+
+    //define function to style points
+    function returnStopMarker(json,latlng){
+      var att = json.properties;
+      if (att.trip_count == 1){
+        var clrStop = '#FEC1C1';
+        var radStop = 2
+      } if(att.trip_count >= 2 && att.trip_count<=3){
+        var clrStop = '#FEA3A3';
+        var radStop = 3
+      }if(att.trip_count >= 4 && att.trip_count<=5){
+        var clrStop = '#FE7575';
+        var radStop = 5
+      }if(att.trip_count >= 6 && att.trip_count<=7){
+        var clrStop = '#EF1919';
+        var radStop = 7
+      }if(att.trip_count >= 8){
+        var clrStop = '#970000';
+        var radStop = 9
+      }
+      return L.circleMarker(latlng,{radius:radStop, stroke:false, fillOpacity: 0.6,color:clrStop}).bindTooltip("<h4>Stop ID: "+att.stop_id+"</h4>Trip Count: "+att.trip_count);
+    }
+    //legend
+
+</script>
+<script src="js/buttons_event.js"></script>
+
+</body>
+</html>
