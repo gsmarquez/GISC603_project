@@ -9,4 +9,4 @@ Final Project for GISC603 Cartographic Visualization<br>
 <b>js/update_table.js:</b> events to update html table based on selection box<br>
 <b>step1_preprocess:</b> python script to process GTFS files and create geojson. also includes python script to create html table using PrettyTable.<br>
 <br>
-Final website: http://13.57.235.81/projects/gtfs/index.html
+Final website and more information found at: http://13.57.235.81/projects/gtfs/index.html
