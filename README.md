@@ -1,5 +1,6 @@
 # GISC603_project
 Final Project for GISC603 Cartographic Visualization<br>
+<br>
 <b>Files:</b><br>
 index.html: front-end website and web map<br>
 style.css: stylesheet for website<br>
