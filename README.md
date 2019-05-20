@@ -2,7 +2,7 @@
 Final Project for GISC603 Cartographic Visualization<br>
 <br>
 <b>Files:</b><br>
-index.html: front-end website and web map<br>
+<u>index.html: </u>front-end website and web map<br>
 style.css: stylesheet for website<br>
 load_geojson.php: connect to pgsql and pull stops geojson file from database.<br>
 js/map_event.js: events to update map based on selection box<br>
