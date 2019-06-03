@@ -1,4 +1,4 @@
-# GISC603_project
+# Displaying GTFS Data using Leaflet
 Final Project for GISC603 Cartographic Visualization<br>
 <br>
 ## Files:
